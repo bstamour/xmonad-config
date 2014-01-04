@@ -8,9 +8,11 @@ Config { font = "-*-Fixed-Bold-R-Normal-*-13-*-*-*-*-*-*-*"
                     , Run Date "%a %b %_d %l:%M" "date" 10
                     , Run Network "wlan0" ["-L","0","-H","32","--normal","green","--high","red"] 10
                     , Run Battery ["-L","50","-H","75","--high","green","--normal","yellow", "--low", "red"] 30
+                    , Run Com "/home/bryan/.xmonad/bin/getvolume.sh level" [] "volumelevel" 10
+                    , Run Com "/home/bryan/.xmonad/bin/getvolume.sh mute" [] "volumemute" 10
                     , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% * %swap% | %battery%      <fc=#ee9a00>%date%</fc>"
+       , template = "%StdinReader% }{ %cpu% | %volumelevel% (%volumemute%) | %battery% <fc=#ee9a00>%date%</fc>"
        }

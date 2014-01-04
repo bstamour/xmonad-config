@@ -24,8 +24,8 @@ myConfig xmproc =
   , modMask            = myModMask
   , terminal           = myTerminal
   , normalBorderColor  = "#444444"
-  , focusedBorderColor = "#005577"
-  , borderWidth        = 2
+  , focusedBorderColor = "#FF0000"
+  , borderWidth        = 1
   , workspaces         = myWorkspaces
   }
 
@@ -79,8 +79,17 @@ myLogHook xmproc = dynamicLogWithPP xmobarPP
 myLaunchKey = 0x1008FF41
 
 
+-- Volume control keys.
+myRaiseVolumeKey = 0x1008ff13
+myLowerVolumeKey = 0x1008ff11
+myMuteVolumeKey  = 0x1008ff12
+
+
 myAdditionalKeys =
   [ ((myModMask .|. shiftMask, xK_p), spawn "sudo /usr/sbin/pm-suspend")
   , ((0, myLaunchKey),                spawn "sudo /sbin/shutdown -h now")
+  , ((0, myMuteVolumeKey),            spawn "amixer set Master toggle")
+  , ((0, myRaiseVolumeKey),           spawn "amixer set Master,0 2%+")
+  , ((0, myLowerVolumeKey),           spawn "amixer set Master,0 2%-")
   , ((myModMask, xK_m),               spawn (myTerminal ++ " -e mutt"))
   ]
