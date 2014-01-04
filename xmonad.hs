@@ -50,18 +50,23 @@ myManageHook = manageDocks        <+>
 myWorkspaces = ["1:mail", "2:web", "3:code", "4:terms", "5", "6" ,"7", "8", "9","10"]
 
 
-myLayoutHook = standards
+myLayoutHook = avoidStruts                 $
+               onWorkspace "2:web" web     $
+               onWorkspace "4:terms" terms $
+               standards
   where
-    standards = tiled ||| Mirror tiled ||| paddedFull ||| full ||| grid
+    -- Per-workspace layout schemes.
+    standards = tiled ||| Mirror tiled ||| Full
+    web       = paddedFull ||| Full ||| tiled ||| Mirror tiled
+    terms     = Grid
 
-    tiled       = avoidStruts $ Tall nmaster delta ratio
-    paddedFull  = avoidStruts $ padding 0 200  Full
-    full        = avoidStruts Full
-    grid        = avoidStruts Grid
-
-    nmaster = 1
-    ratio   = 1/2
-    delta   = 3/100
+    -- Layouts.
+    paddedFull  = padding 0 200  Full
+    tiled       = Tall nmaster delta ratio
+      where
+        nmaster = 1
+        ratio   = 1/2
+        delta   = 3/100
 
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
