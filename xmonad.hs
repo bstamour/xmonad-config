@@ -52,21 +52,20 @@ myManageHook = manageDocks        <+>
 myWorkspaces = ["1:mail", "2:web", "3:code", "4:terms", "5", "6" ,"7", "8", "9","10"]
 
 
-myLayoutHook = avoidStruts                                  $
-               onWorkspace "2:web" web                      $
-               onWorkspace "4:terms" terms                  $
-               onWorkspaces ["1:mail", "3:code"] fullscreen $
+myLayoutHook = avoidStruts                 $
+               onWorkspace "2:web" web     $
+               onWorkspace "4:terms" terms $
                standards
   where
     -- Per-workspace layout schemes.
     standards  = tiled ||| Mirror tiled ||| Full
     web        = paddedFull ||| Full ||| tiled ||| Mirror tiled
     fullscreen = Full ||| tiled ||| Mirror tiled
-    terms      = Grid
+    terms      = Grid ||| tiled ||| Full
 
     -- Layouts.
     paddedFull  = renamed [Replace "Padded"]  $ padding 0 200  Full
-    tiled       = renamed [Replace "Default"] $ spacing 5 $ Tall nmaster delta ratio
+    tiled       = renamed [Replace "Default"] $ smartSpacing 5 $ Tall nmaster delta ratio
       where
         nmaster = 1
         ratio   = 1/2
