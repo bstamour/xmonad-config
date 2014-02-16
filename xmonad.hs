@@ -43,12 +43,17 @@ myManageHook = manageDocks
                <+> composeAll myRules
                <+> manageHook defaultConfig
   where
-    myRules = [ title     =? "mutt"    --> doShift "1:mail"
-              , className =? "Firefox" --> doShift "2:web"
-              , className =? "Emacs"   --> doShift "3:code"
+    myRules = [ className =? "Firefox"  --> doShift "2:web"
+              , className =? "Chromium" --> doShift "2:web"
+              , className =? "Emacs"    --> doShift "1:emacs"
+              , resource  =? "mutt"     --> doShift "3:comm"
               ]
 
-myWorkspaces = ["1:mail", "2:web", "3:code", "4:terms", "5", "6" ,"7", "8", "9","10"]
+myWorkspaces = zipWith (++) numbers (labels ++ blanks)
+  where
+    numbers = map show [1.. 9]
+    blanks  = "" : blanks
+    labels  = [":emacs", ":web", ":comm", ":terms"]
 
 myLayoutHook = avoidStruts
                $ onWorkspace "2:web" fullscreen
@@ -77,17 +82,17 @@ myLowerVolumeKey = 0x1008ff11
 myMuteVolumeKey  = 0x1008ff12
 
 myAdditionalKeys =
-  [ ((modShift, xK_p),      spawn "sudo /usr/sbin/pm-suspend")  -- Suspend
-  , ((0, myLaunchKey),      spawn "sudo /sbin/shutdown -h now") -- Shutdown
-  , ((0, myMuteVolumeKey),  spawn "amixer set Master toggle")   -- Toggle sound mute
-  , ((0, myRaiseVolumeKey), spawn "amixer set Master,0 2%+")    -- Raise volume
-  , ((0, myLowerVolumeKey), spawn "amixer set Master,0 2%-")    -- Lower volume
-  , ((mod, xK_m),           spawn (myTerminal ++ " -e mutt"))   -- Launch mail
-  , ((mod, xK_Tab),         toggleWS)                           -- toggle last workspace (super-tab)
-  , ((mod, xK_Right),       nextWS)                             -- go to next workspace
-  , ((mod, xK_Left),        prevWS)                             -- go to prev workspace
-  , ((modShift, xK_Right),  shiftToNext)                        -- move client to next workspace
-  , ((modShift, xK_Left),   shiftToPrev)                        -- move client to prev workspace
+  [ ((modShift, xK_p),      spawn "sudo /usr/sbin/pm-suspend")
+  , ((0, myLaunchKey),      spawn "sudo /sbin/shutdown -h now")
+  , ((0, myMuteVolumeKey),  spawn "amixer set Master toggle")
+  , ((0, myRaiseVolumeKey), spawn "amixer set Master,0 2%+")
+  , ((0, myLowerVolumeKey), spawn "amixer set Master,0 2%-")
+  , ((mod, xK_m),           spawn (myTerminal ++ " -name mutt -e mutt"))
+  , ((mod, xK_Tab),         toggleWS)
+  , ((mod, xK_Right),       nextWS)
+  , ((mod, xK_Left),        prevWS)
+  , ((modShift, xK_Right),  shiftToNext)
+  , ((modShift, xK_Left),   shiftToPrev)
   ]
   where
     mod      = myModMask
