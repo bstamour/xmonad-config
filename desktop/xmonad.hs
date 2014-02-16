@@ -42,17 +42,17 @@ myManageHook = manageDocks
                <+> composeAll myRules
                <+> manageHook defaultConfig
   where
-    myRules = [ className =? "Firefox"  --> doShift "2:web"
-              , className =? "Chromium" --> doShift "2:web"
-              , className =? "Emacs"    --> doShift "1:emacs"
-              , resource  =? "mutt"     --> doShift "3:comm"
+    myRules = [ className =? "Firefox"     --> doShift "2:web"
+              , className =? "Chromium"    --> doShift "2:web"
+              , className =? "Thunderbird" --> doShift "2:web"
+              , className =? "Emacs"       --> doShift "1:emacs"
               ]
 
 myWorkspaces = zipWith (++) numbers (labels ++ blanks)
   where
     numbers = map show [1.. 9]
     blanks  = "" : blanks
-    labels  = [":emacs", ":web", ":comm", ":terms"]
+    labels  = [":emacs", ":web", ":terms"]
 
 myLayoutHook = avoidStruts
                $ onWorkspace "2:web" fullscreen
@@ -72,22 +72,8 @@ myLogHook xmproc = dynamicLogWithPP xmobarPP
                      , ppTitle  = xmobarColor "green" "" . shorten 50
                      }
 
--- The little launch key next to the mic key at the top.
-myLaunchKey = 0x1008FF41
-
--- Volume control keys.
-myRaiseVolumeKey = 0x1008ff13
-myLowerVolumeKey = 0x1008ff11
-myMuteVolumeKey  = 0x1008ff12
-
 myAdditionalKeys =
-  [ ((modShift, xK_p),      spawn "sudo /usr/sbin/pm-suspend")
-  , ((0, myLaunchKey),      spawn "sudo /sbin/shutdown -h now")
-  , ((0, myMuteVolumeKey),  spawn "amixer set Master toggle")
-  , ((0, myRaiseVolumeKey), spawn "amixer set Master,0 2%+")
-  , ((0, myLowerVolumeKey), spawn "amixer set Master,0 2%-")
-  , ((mod, xK_m),           spawn (myTerminal ++ " -name mutt -e mutt"))
-  , ((mod, xK_Tab),         toggleWS)
+  [ ((mod, xK_Tab),         toggleWS)
   , ((mod, xK_Right),       nextWS)
   , ((mod, xK_Left),        prevWS)
   , ((modShift, xK_Right),  shiftToNext)
