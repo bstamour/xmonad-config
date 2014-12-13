@@ -21,6 +21,14 @@ import Network.HostName
 [d| myHostName = $(stringE =<< runIO getHostName ) |]
 
 
+onLaptop :: Bool
+onLaptop = myHostName == "cantor"
+
+
+onDesktop :: Bool
+onDesktop = myHostName == "planck"
+
+
 main = do
   xmproc <- spawnPipe "/home/bryan/.cabal/bin/xmobar /home/bryan/.xmonad/xmobarrc"
   xmonad $ myConfig xmproc `additionalKeys` myAdditionalKeys
@@ -77,7 +85,7 @@ myLayoutHook = avoidStruts $ standards
     delta      = 3/100
     spacing = case myHostName of
       "cantor" -> 0
-      _        -> 20
+      _        -> 10
 
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
