@@ -83,9 +83,7 @@ myLayoutHook = avoidStruts $ standards
     nmaster    = 1
     ratio      = 1/2
     delta      = 3/100
-    spacing = case myHostName of
-      "cantor" -> 0
-      _        -> 10
+    spacing    = if onLaptop then 0 else 10
 
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
