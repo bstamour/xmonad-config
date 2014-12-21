@@ -38,6 +38,7 @@ myConfig xmproc =
   defaultConfig
   { manageHook         = myManageHook
   , layoutHook         = myLayoutHook
+  , workspaces         = myWorkspaces
   , logHook            = myLogHook xmproc
   , modMask            = myModMask
   , terminal           = myTerminal
@@ -58,28 +59,24 @@ myManageHook = manageDocks
                <+> composeAll myRules
                <+> manageHook defaultConfig
   where
-    myRules = [ className =? "Firefox"  --> doShift "2:web"
-              , className =? "Chromium" --> doShift "2:web"
-              , className =? "Emacs"    --> doShift "1:emacs"
-              , resource  =? "mutt"     --> doShift "3:comm"
+    myRules = [ className =? "Firefox"  --> doShift "1:web"
+              , className =? "Emacs"    --> doShift "2:emacs"
               ]
 
 
 myWorkspaces = zipWith (++) numbers (labels ++ blanks)
   where
-    numbers = map show [1.. 9]
-    blanks  = "" : blanks
-    labels  = [":emacs", ":web", ":comm", ":terms"]
+    numbers   = map show [1.. 9]
+    blanks    = "" : blanks
+    labels    = [":web", ":emacs", ":terms"]
 
 
-myLayoutHook = avoidStruts $ standards
+myLayoutHook = onWorkspace "3:terms" termsLayout $ standardLayout
   where
-    standards  = tiled ||| Mirror tiled ||| Full
-    fullscreen = Full ||| tiled ||| Mirror tiled
-    terms      = Grid ||| tiled ||| Full
-    tiled      = renamed [Replace "Default"]
-                 $ smartSpacing spacing
-                 $ Tall nmaster delta ratio
+    termsLayout      = avoidStruts $ (Grid ||| tiled ||| Mirror tiled ||| Full)
+    standardLayout   = avoidStruts $ (tiled ||| Mirror tiled ||| Full)
+
+    tiled      = renamed [Replace "Default"] $ smartSpacing spacing $ Tall nmaster delta ratio
     nmaster    = 1
     ratio      = 1/2
     delta      = 3/100
